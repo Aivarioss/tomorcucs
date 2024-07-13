@@ -52,8 +52,8 @@
         }
 
         .circle img {
-            width: 100px;
-            height: 100px;
+            width: 80%;
+            height: auto;
             border-radius: 50%;
         }
 
@@ -215,8 +215,8 @@
             }
 
             .circle img {
-                width: 100px;
-                height: 100px;
+                width: 80%;
+                height: auto;
             }
 
             .points, .timer, .burnt-points {
@@ -231,8 +231,8 @@
             }
 
             .circle img {
-                width: 80px;
-                height: 80px;
+                width: 80%;
+                height: auto;
             }
 
             .points, .timer, .burnt-points {
@@ -420,6 +420,42 @@
         .info-modal .cost.insufficient {
             color: red;
         }
+
+        /* Ref and Task Modals */
+        .ref-modal, .task-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .ref-modal .close-btn, .task-modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -505,13 +541,27 @@
         <button class="accept-btn" id="acceptBtn" onclick="acceptBoost()">Accept</button>
     </div>
 
+    <!-- Ref Modal -->
+    <div class="ref-modal" id="refModal">
+        <button class="close-btn" onclick="closeRefModal()">X</button>
+        <h2>Referral</h2>
+        <p>Here you can add your referral link or code.</p>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="task-modal" id="taskModal">
+        <button class="close-btn" onclick="closeTaskModal()">X</button>
+        <h2>Tasks</h2>
+        <p>Here you can add tasks or challenges for users.</p>
+    </div>
+
     <!-- Footer Tabs -->
     <div class="footer">
-        <div class="footer-tab" onclick="openRefTab()">
+        <div class="footer-tab" onclick="openRefModal()">
             <img src="ref.png" alt="Ref">
             <span>Ref.</span>
         </div>
-        <div class="footer-tab" onclick="openTaskTab()">
+        <div class="footer-tab" onclick="openTaskModal()">
             <img src="task_icon.png" alt="Task">
             <span>Task</span>
         </div>
@@ -833,12 +883,20 @@
             }
         }
 
-        function openRefTab() {
-            alert('Ref. tab clicked');
+        function openRefModal() {
+            document.getElementById('refModal').style.display = 'flex';
         }
 
-        function openTaskTab() {
-            alert('Task tab clicked');
+        function closeRefModal() {
+            document.getElementById('refModal').style.display = 'none';
+        }
+
+        function openTaskModal() {
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
         }
 
         function updateLevels() {
