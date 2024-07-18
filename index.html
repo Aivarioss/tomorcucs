@@ -460,11 +460,13 @@
     <!-- Firebase SDK scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtYa_8qA2XZsxRlsNZZDM8xqQD4-HpG48",
             authDomain: "tomandcuc-c2a0c.firebaseapp.com",
+            databaseURL: "https://tomandcuc-c2a0c-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "tomandcuc-c2a0c",
             storageBucket: "tomandcuc-c2a0c.appspot.com",
             messagingSenderId: "885432885141",
@@ -475,6 +477,7 @@
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const analytics = firebase.analytics(app);
+        const database = firebase.database();
     </script>
 </head>
 <body>
@@ -611,6 +614,8 @@
 
         const levelCosts = [100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000];
         const burningLevelCosts = [1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000, 100000000000];
+
+        const telegramUserId = "YOUR_TELEGRAM_USER_ID"; // Jums jāiegūst unikāls Telegram lietotāja ID
 
         document.getElementById('cucumber').addEventListener('click', () => startRotation('cucumber'));
         document.getElementById('tomato').addEventListener('click', () => startRotation('tomato'));
@@ -927,6 +932,73 @@
             document.getElementById('tomatoBurntPoints').textContent = `Burnt Points: ${tomatoBurntPoints}`;
             document.getElementById('cucumberPoints').textContent = `Total Points: ${cucumberPoints}`;
             document.getElementById('tomatoPoints').textContent = `Total Points: ${tomatoPoints}`;
+        }
+
+        // Saglabāt spēles datus pirms lapas aizvēršanas
+        window.addEventListener('beforeunload', (event) => {
+            const gameData = {
+                cucumberPoints: cucumberPoints,
+                tomatoPoints: tomatoPoints,
+                cucumberBurntPoints: cucumberBurntPoints,
+                tomatoBurntPoints: tomatoBurntPoints,
+                cucumberDuration: cucumberDuration,
+                tomatoDuration: tomatoDuration,
+                tomBoost: tomBoost,
+                cucBoost: cucBoost,
+                tomBurnBoost: tomBurnBoost,
+                cucBurnBoost: cucBurnBoost,
+                tomEnergySpeedLevel: tomEnergySpeedLevel,
+                cucEnergySpeedLevel: cucEnergySpeedLevel,
+                tomBurningEnergySpeedLevel: tomBurningEnergySpeedLevel,
+                cucBurningEnergySpeedLevel: cucBurningEnergySpeedLevel
+            };
+            saveGameData(telegramUserId, gameData);
+        });
+
+        // Ielādēt spēles datus, kad lapa tiek atvērta
+        window.addEventListener('load', (event) => {
+            loadGameData(telegramUserId);
+        });
+
+        function saveGameData(userId, gameData) {
+            database.ref('games/' + userId).set(gameData)
+                .then(() => {
+                    console.log("Game data successfully saved!");
+                })
+                .catch((error) => {
+                    console.error("Error saving game data: ", error);
+                });
+        }
+
+        function loadGameData(userId) {
+            database.ref('games/' + userId).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        let gameData = snapshot.val();
+                        console.log("Game data loaded:", gameData);
+                        cucumberPoints = gameData.cucumberPoints;
+                        tomatoPoints = gameData.tomatoPoints;
+                        cucumberBurntPoints = gameData.cucumberBurntPoints;
+                        tomatoBurntPoints = gameData.tomatoBurntPoints;
+                        cucumberDuration = gameData.cucumberDuration;
+                        tomatoDuration = gameData.tomatoDuration;
+                        tomBoost = gameData.tomBoost;
+                        cucBoost = gameData.cucBoost;
+                        tomBurnBoost = gameData.tomBurnBoost;
+                        cucBurnBoost = gameData.cucBurnBoost;
+                        tomEnergySpeedLevel = gameData.tomEnergySpeedLevel;
+                        cucEnergySpeedLevel = gameData.cucEnergySpeedLevel;
+                        tomBurningEnergySpeedLevel = gameData.tomBurningEnergySpeedLevel;
+                        cucBurningEnergySpeedLevel = gameData.cucBurningEnergySpeedLevel;
+                        updatePoints();
+                        updateLevels();
+                    } else {
+                        console.log("No game data found!");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error loading game data: ", error);
+                });
         }
     </script>
 </body>
