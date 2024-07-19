@@ -18,7 +18,6 @@
             margin: 0;
             font-family: 'Roboto', sans-serif;
         }
-
         .game-container {
             display: flex;
             flex-direction: column;
@@ -27,7 +26,6 @@
             width: 90%;
             max-width: 600px;
         }
-
         .circle-container {
             display: flex;
             flex-direction: column;
@@ -35,7 +33,6 @@
             margin: 20px;
             text-align: center;
         }
-
         .circle {
             display: flex;
             justify-content: center;
@@ -50,13 +47,11 @@
             margin: 10px 0;
             overflow: hidden;
         }
-
         .circle img {
             width: 80%;
             height: auto;
             border-radius: 50%;
         }
-
         .circle .text {
             position: absolute;
             font-size: 24px;
@@ -64,7 +59,6 @@
             text-shadow: 2px 2px 4px black;
             font-weight: bold;
         }
-
         .points, .burnt-points, .timer, .status {
             background: rgba(255, 255, 255, 0.9);
             padding: 5px 10px;
@@ -75,19 +69,16 @@
             display: inline-block;
             margin: 5px 0;
         }
-
         .points, .burnt-points {
             display: flex;
             align-items: center;
         }
-
         .points-icon {
             width: 20px;
             height: 20px;
             vertical-align: middle;
             margin-right: 5px;
         }
-
         .status {
             position: fixed;
             top: 10px;
@@ -95,65 +86,52 @@
             transform: translateX(-50%);
             display: none;
         }
-
         #cucumberPoints {
             background-color: green;
             color: white;
         }
-
         #tomatoPoints {
             background-color: red;
             color: white;
         }
-
         #cucumberBurntPoints {
             background-color: darkgreen;
             color: white;
         }
-
         #tomatoBurntPoints {
             background-color: darkred;
             color: white;
         }
-
         .rotate-clockwise#tomato, .rotate-counterclockwise#tomato {
             background: radial-gradient(circle, lightcoral, red, darkred);
             box-shadow: 0 0 20px 10px rgba(255, 99, 71, 0.6);
         }
-
         .rotate-clockwise#cucumber, .rotate-counterclockwise#cucumber {
             background: radial-gradient(circle, lightgreen, green, darkgreen);
             box-shadow: 0 0 20px 10px rgba(0, 128, 0, 0.6);
         }
-
         .rotate-clockwise .text, .rotate-counterclockwise .text {
             display: none;
         }
-
         .rotate-clockwise {
             animation: spin-clockwise 1s linear infinite;
         }
-
         .rotate-counterclockwise {
             animation: spin-counterclockwise 1s linear infinite;
         }
-
         @keyframes spin-clockwise {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         @keyframes spin-counterclockwise {
             from { transform: rotate(0deg); }
             to { transform: rotate(-360deg); }
         }
-
         @keyframes fall {
             0% { transform: translateY(-100px) translateX(0) scale(1); opacity: 1; }
             50% { transform: translateY(100px) translateX(20px) scale(0.8); opacity: 0.8; }
             100% { transform: translateY(200px) translateX(-10px) scale(0.6); opacity: 0; }
         }
-
         .falling {
             position: absolute;
             width: 100px;
@@ -161,13 +139,11 @@
             z-index: 0;
             animation: fall 2s linear;
         }
-
         @keyframes rise {
             0% { transform: translateY(100px) translateX(0) scale(0.6); opacity: 0; }
             50% { transform: translateY(-100px) translateX(-20px) scale(0.8); opacity: 0.8; }
             100% { transform: translateY(-200px) translateX(10px) scale(1); opacity: 1; }
         }
-
         .rising {
             position: absolute;
             width: 100px;
@@ -175,17 +151,14 @@
             z-index: 0;
             animation: rise 2s linear;
         }
-
         @keyframes text-rise {
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-50px); opacity: 0; }
         }
-
         @keyframes text-fall {
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(50px); opacity: 0; }
         }
-
         .rising-text, .falling-text {
             position: absolute;
             font-size: 18px;
@@ -195,51 +168,41 @@
             animation-fill-mode: forwards;
             pointer-events: none;
         }
-
         .rising-text {
             animation-name: text-rise;
         }
-
         .falling-text {
             animation-name: text-fall;
         }
-
         @media (min-width: 600px) {
             .game-container {
                 flex-direction: row;
             }
-
             .circle {
                 width: 150px;
                 height: 150px;
             }
-
             .circle img {
                 width: 80%;
                 height: auto;
             }
-
             .points, .timer, .burnt-points {
                 font-size: 18px;
             }
         }
-
         @media (max-width: 600px) {
             .circle {
                 width: 120px;
                 height: 120px;
             }
-
             .circle img {
                 width: 80%;
                 height: auto;
             }
-
             .points, .timer, .burnt-points {
                 font-size: 14px;
             }
         }
-
         /* Boost Popup Styles */
         .boost-popup {
             position: fixed;
@@ -258,11 +221,9 @@
             padding: 20px;
             text-align: center;
         }
-
         .boost-popup h2 {
             margin-top: 0;
         }
-
         .boost-popup button {
             margin-top: 10px;
             padding: 10px 20px;
@@ -273,11 +234,9 @@
             cursor: pointer;
             font-size: 16px;
         }
-
         .boost-popup button:hover {
             background-color: #218838;
         }
-
         .boost-popup .close-btn {
             position: absolute;
             top: 10px;
@@ -294,33 +253,27 @@
             justify-content: center;
             align-items: center;
         }
-
         .boost-sub-section {
             display: flex;
             align-items: center;
             margin-top: 10px;
         }
-
         .boost-sub-section img {
             width: 30px;
             height: 30px;
             margin-right: 10px;
         }
-
         .boost-sub-section div {
             text-align: left;
         }
-
         .boost-sub-section div h3 {
             margin: 0;
             font-size: 16px;
         }
-
         .boost-sub-section div p {
             margin: 0;
             font-size: 14px;
         }
-
         /* Footer Tabs */
         .footer {
             position: fixed;
@@ -331,7 +284,6 @@
             background-color: #333;
             padding: 10px 0;
         }
-
         .footer-tab {
             flex-grow: 1;
             text-align: center;
@@ -340,22 +292,18 @@
             cursor: pointer;
             padding: 10px 0;
         }
-
         .footer-tab:hover {
             background-color: #444;
         }
-
         .footer-tab img {
             width: 24px;
             height: 24px;
             vertical-align: middle;
         }
-
         .footer-tab span {
             margin-left: 5px;
             vertical-align: middle;
         }
-
         /* Informational Modal Styles */
         .info-modal {
             position: fixed;
@@ -374,7 +322,6 @@
             padding: 20px;
             text-align: center;
         }
-
         .info-modal .close-btn {
             position: absolute;
             top: 10px;
@@ -391,7 +338,6 @@
             justify-content: center;
             align-items: center;
         }
-
         .info-modal .accept-btn {
             margin-top: 20px;
             padding: 10px 20px;
@@ -402,25 +348,20 @@
             cursor: pointer;
             font-size: 16px;
         }
-
         .info-modal .accept-btn:hover {
             background-color: #218838;
         }
-
         .info-modal .cost {
             font-size: 18px;
             font-weight: bold;
             margin-top: 10px;
         }
-
         .info-modal .cost.sufficient {
             color: green;
         }
-
         .info-modal .cost.insufficient {
             color: red;
         }
-
         /* Ref and Task Modals */
         .ref-modal, .task-modal {
             position: fixed;
@@ -439,7 +380,6 @@
             padding: 20px;
             text-align: center;
         }
-
         .ref-modal .close-btn, .task-modal .close-btn {
             position: absolute;
             top: 10px;
@@ -615,7 +555,8 @@
         const levelCosts = [100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000];
         const burningLevelCosts = [1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000, 100000000000];
 
-        const telegramUserId = "YOUR_TELEGRAM_USER_ID"; // Jums jāiegūst unikāls Telegram lietotāja ID
+        // Iegūt lietotāja ID no Telegram bota
+        const telegramUserId = new URLSearchParams(window.location.search).get('userId');
 
         document.getElementById('cucumber').addEventListener('click', () => startRotation('cucumber'));
         document.getElementById('tomato').addEventListener('click', () => startRotation('tomato'));

@@ -7,8 +7,10 @@ const { Telegraf } = require('telegraf');
 const app = express();
 app.use(bodyParser.json());
 
+// Initialize Telegraf with the bot token from environment variables
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
+// Firebase configuration using environment variables
 const firebaseConfig = {
   type: process.env.FIREBASE_TYPE,
   project_id: process.env.FIREBASE_PROJECT_ID,
@@ -22,6 +24,7 @@ const firebaseConfig = {
   client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL
 };
 
+// Initialize Firebase
 firebase.initializeApp({
   credential: firebase.credential.cert(firebaseConfig),
   databaseURL: process.env.FIREBASE_DATABASE_URL
@@ -29,13 +32,17 @@ firebase.initializeApp({
 
 const database = firebase.database();
 
+// Telegram bot start command handling
 bot.start((ctx) => {
   const userId = ctx.from.id;
-  ctx.reply(`Welcome! Your ID is ${userId}`);
+  const gameUrl = `${process.env.GAME_URL}?userId=${userId}`;
+  ctx.reply(`Welcome! Click the link to start the game: ${gameUrl}`);
 });
 
+// Launch the Telegram bot
 bot.launch();
 
+// Endpoint to save game data
 app.post('/saveGameData', (req, res) => {
   const { userId, gameData } = req.body;
   database.ref('games/' + userId).set(gameData)
@@ -43,6 +50,7 @@ app.post('/saveGameData', (req, res) => {
     .catch((error) => res.status(500).send('Error saving game data: ' + error));
 });
 
+// Endpoint to load game data
 app.get('/loadGameData/:userId', (req, res) => {
   const userId = req.params.userId;
   database.ref('games/' + userId).once('value')
@@ -56,6 +64,7 @@ app.get('/loadGameData/:userId', (req, res) => {
     .catch((error) => res.status(500).send('Error loading game data: ' + error));
 });
 
+// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
