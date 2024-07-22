@@ -398,9 +398,9 @@
         }
     </style>
     <!-- Firebase SDK scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -415,8 +415,8 @@
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const analytics = firebase.analytics(app);
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
         const database = firebase.database();
     </script>
 </head>
@@ -562,6 +562,8 @@
         document.getElementById('tomato').addEventListener('click', () => startRotation('tomato'));
 
         function formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) seconds = 0;
+            seconds = Math.floor(seconds); // Apaļot uz leju līdz veseliem skaitļiem
             const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
             const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
             const s = (seconds % 60).toString().padStart(2, '0');
@@ -875,33 +877,10 @@
             document.getElementById('tomatoPoints').textContent = `Total Points: ${tomatoPoints}`;
         }
 
-        // Saglabāt spēles datus pirms lapas aizvēršanas
-        window.addEventListener('beforeunload', (event) => {
-            const gameData = {
-                cucumberPoints: cucumberPoints,
-                tomatoPoints: tomatoPoints,
-                cucumberBurntPoints: cucumberBurntPoints,
-                tomatoBurntPoints: tomatoBurntPoints,
-                cucumberDuration: cucumberDuration,
-                tomatoDuration: tomatoDuration,
-                tomBoost: tomBoost,
-                cucBoost: cucBoost,
-                tomBurnBoost: tomBurnBoost,
-                cucBurnBoost: cucBurnBoost,
-                tomEnergySpeedLevel: tomEnergySpeedLevel,
-                cucEnergySpeedLevel: cucEnergySpeedLevel,
-                tomBurningEnergySpeedLevel: tomBurningEnergySpeedLevel,
-                cucBurningEnergySpeedLevel: cucBurningEnergySpeedLevel
-            };
-            saveGameData(telegramUserId, gameData);
-        });
-
-        // Ielādēt spēles datus, kad lapa tiek atvērta
-        window.addEventListener('load', (event) => {
-            loadGameData(telegramUserId);
-        });
-
         function saveGameData(userId, gameData) {
+            if (isNaN(gameData.cucumberDuration)) gameData.cucumberDuration = 0;
+            if (isNaN(gameData.tomatoDuration)) gameData.tomatoDuration = 0;
+
             database.ref('games/' + userId).set(gameData)
                 .then(() => {
                     console.log("Game data successfully saved!");
@@ -931,6 +910,29 @@
                         cucEnergySpeedLevel = gameData.cucEnergySpeedLevel;
                         tomBurningEnergySpeedLevel = gameData.tomBurningEnergySpeedLevel;
                         cucBurningEnergySpeedLevel = gameData.cucBurningEnergySpeedLevel;
+
+                        const now = new Date().getTime();
+                        const timeDiff = (now - gameData.lastSaved) / 1000; // time difference in seconds
+
+                        cucumberDuration = Math.max(0, cucumberDuration - timeDiff);
+                        tomatoDuration = Math.max(0, tomatoDuration - timeDiff);
+
+                        if (cucumberDuration === 0) {
+                            clearInterval(cucumberInterval);
+                            document.getElementById('cucumber').classList.remove('rotate-clockwise');
+                            document.getElementById('cucumber').classList.remove('rotate-counterclockwise');
+                        } else {
+                            startRotation('cucumber');
+                        }
+
+                        if (tomatoDuration === 0) {
+                            clearInterval(tomatoInterval);
+                            document.getElementById('tomato').classList.remove('rotate-clockwise');
+                            document.getElementById('tomato').classList.remove('rotate-counterclockwise');
+                        } else {
+                            startRotation('tomato');
+                        }
+
                         updatePoints();
                         updateLevels();
                     } else {
@@ -941,6 +943,33 @@
                     console.error("Error loading game data: ", error);
                 });
         }
+
+        // Saglabāt spēles datus pirms lapas aizvēršanas
+        window.addEventListener('beforeunload', (event) => {
+            const gameData = {
+                cucumberPoints: cucumberPoints,
+                tomatoPoints: tomatoPoints,
+                cucumberBurntPoints: cucumberBurntPoints,
+                tomatoBurntPoints: tomatoBurntPoints,
+                cucumberDuration: cucumberDuration,
+                tomatoDuration: tomatoDuration,
+                tomBoost: tomBoost,
+                cucBoost: cucBoost,
+                tomBurnBoost: tomBurnBoost,
+                cucBurnBoost: cucBurnBoost,
+                tomEnergySpeedLevel: tomEnergySpeedLevel,
+                cucEnergySpeedLevel: cucEnergySpeedLevel,
+                tomBurningEnergySpeedLevel: tomBurningEnergySpeedLevel,
+                cucBurningEnergySpeedLevel: cucBurningEnergySpeedLevel,
+                lastSaved: new Date().getTime() // save the current time
+            };
+            saveGameData(telegramUserId, gameData);
+        });
+
+        // Ielādēt spēles datus, kad lapa tiek atvērta
+        window.addEventListener('load', (event) => {
+            loadGameData(telegramUserId);
+        });
     </script>
 </body>
 </html>
